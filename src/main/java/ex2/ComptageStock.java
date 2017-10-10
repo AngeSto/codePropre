@@ -1,65 +1,149 @@
 package ex2;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+
 
 public class ComptageStock {
 
+	/** nb : int */
 	private int nb;
+	/** resultat : int */
 	private int resultat;
-	private Date dateDebutComptage;
-	private String dateFinComptage;
-	private String type;
-	
-	public void ajouterElement(int montant){
-		nb++;
-		resultat +=montant;
+	/** dateDebutComptage : Date */
+	private LocalDate dateDebutComptage;
+	/** dateFinComptage : Date */
+	private LocalDate dateFinComptage;
+
+	public ComptageStock (LocalDate dateDebutComptage){
+		this.dateDebutComptage = dateDebutComptage;
 	}
 	
-	public void afficheStatutComptage(){
-		
-		if (type!=null && type.equals("SOM")){
-			System.out.println("Ce comptage est de type SOMME");
-			System.out.println("Nombre d'élements "+nb);
-			
-			System.out.println("Résultat "+resultat);
+	
+	/**
+	 * @param montant
+	 *            paramètre montant
+	 */
+	public void ajouterElement(int montant) {
+		nb++;
+		resultat += montant;
+	}
+
+	/**
+	 * 
+	 */
+	public void afficheStatutComptage(TypeComptage typeComptage) {
+		if (nb == 0) {
+			throw new RuntimeException("Le comptage contient aucun élément");
 		}
-		else if (type!=null && type.equals("MOY")){
-			System.out.println("Ce compte est de type MOYENNE");
-			System.out.println("Nombre d'élements "+nb);
-			
-			System.out.println("Résultat "+resultat/nb);
+		afficherResultat(typeComptage);
+		afficherDateDebut();
+		afficherDateFin();
+
+	}
+
+	/**
+	 * @param typeComptage
+	 */
+	private void afficherResultat(TypeComptage typeComptage) {
+
+		if (typeComptage != null && typeComptage.equals(TypeComptage.SOMME)) {
+			afficherType("SOMME", resultat);
+		} else if (typeComptage != null && typeComptage.equals(TypeComptage.MOYENNE)) {
+			afficherType("MOYENNE", resultat / nb);
 		}
-		
-		if (dateDebutComptage!=null){
-			SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-			System.out.println(f.format(dateDebutComptage));
+	}
+
+	/**
+	 * @param type
+	 * @param resultat
+	 */
+	private void afficherType(String type, double resultat) {
+		System.out.println("Ce comptage est de type " + type);
+		System.out.println("Nombre d'élements " + nb);
+		System.out.println("Résultat " + resultat);
+	}
+
+	/**
+	 * 
+	 */
+	private void afficherDateDebut() {
+		if (dateDebutComptage != null) {
+			System.out.println("Date de création du compte : "+DateUtils.format(dateDebutComptage));
 		}
-		
-		if (dateFinComptage!=null){
-			System.out.println("Le comptage est clos depuis le "+dateFinComptage);
-			if (nb==0){
+	}
+
+	/**
+	 * 
+	 */
+	private void afficherDateFin() {
+		if (dateFinComptage != null) {
+			System.out.println("Le comptage est clos depuis le " + DateUtils.format(dateFinComptage));
+			if (nb == 0) {
 				System.out.println("Le comptage est clos mais n'a pas d'éléments. Le comptage est en anomalie.");
-			}
-			else {
+			} else {
 				System.out.println("Le comptage est clos et est OK.");
 			}
-		}
-		else {
+		} else {
 			System.out.println("Le compte est actif.");
 		}
 	}
-	
-	public Date getDateFinComptage(){
-		SimpleDateFormat ff = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		if (dateFinComptage!=null){
-			try {
-				return ff.parse(dateFinComptage);
-			} catch (ParseException e) {
-				return null;
-			}
-		}
-		return null;
+
+	/**
+	 * Getter for nb
+	 * 
+	 * @return nb
+	 */
+	public int getNb() {
+		return nb;
+	}
+
+	/**
+	 * @param nb
+	 *            the nb to set
+	 */
+	public void setNb(int nb) {
+		this.nb = nb;
+	}
+
+	/**
+	 * Getter for resultat
+	 * 
+	 * @return resultat
+	 */
+	public int getResultat() {
+		return resultat;
+	}
+
+	/**
+	 * @param resultat
+	 *            the resultat to set
+	 */
+	public void setResultat(int resultat) {
+		this.resultat = resultat;
+	}
+
+	/**
+	 * Getter for dateDebutComptage
+	 * 
+	 * @return dateDebutComptage
+	 */
+	public LocalDate getDateDebutComptage() {
+		return dateDebutComptage;
+	}
+
+	/**
+	 * @param dateDebutComptage
+	 *            the dateDebutComptage to set
+	 */
+	public void setDateDebutComptage(LocalDate dateDebutComptage) {
+		this.dateDebutComptage = dateDebutComptage;
+	}
+
+	/**
+	 * @param dateFinComptage
+	 *            the dateFinComptage to set
+	 */
+	public void setDateFinComptage(LocalDate dateFinComptage) {
+		this.dateFinComptage = dateFinComptage;
 	}
 }
